@@ -1,0 +1,44 @@
+{
+	"name": "taskr-sharp",
+	"version": "0.0.0",
+	"description": "Process images with Sharp",
+	"repository": "https://github.com/adamkiss/taskr-sharp",
+	"main": "index.js",
+	"license": "MIT",
+	"files": [
+		"index.js"
+	],
+	"keywords": [
+		"taskr",
+		"taskr-plugin",
+		"taskr-sharp"
+	],
+	"scripts": {
+		"test": "xo && tape test/*.js | tap-spec"
+	},
+	"author": {
+		"name": "taskr-sharp",
+		"email": "iamadamkiss+npm@gmail.com",
+		"url": "https://adamkiss.com"
+	},
+	"devDependencies": {
+		"@taskr/clear": "^1.1.0",
+		"tap-spec": "^4.1.1",
+		"tape": "^4.8.0",
+		"taskr": "^1.1.0",
+		"xo": "*"
+	},
+	"engines": {
+		"node": ">= 4.6"
+	},
+	"xo": {
+		"rules": {
+			"generator-star-spacing": 0,
+			"capitalized-comments": 0,
+			"require-yield": 0
+		}
+	},
+	"dependencies": {
+		"sharp": "^0.18.4"
+	}
+}
