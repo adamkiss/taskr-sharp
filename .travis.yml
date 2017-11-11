@@ -7,6 +7,8 @@ node_js:
 notifications:
   email: false
   pushover:
+    on_success: always
+    on_failure: always
     api_key:
       secure: LICSK667BUJDL742wtggjKsj4MXMX6fSoqawpgdK/DBsM7EAOQ80abrS+ZWoSYaSgpv42ZWnzHPNs4dr2ZDv7/Sq74NMl75OWTFL/PqXdM7iZm7XGuS9hUMkTT/wKc8/WbHjMm0KcEPOXQ8H2RqpkIoOPB/xNHbH9TpCxqLm0EMCnmDKqZPiqnlz6HTKsIkWqSUXPXIqVS7Epfy0L0jEQJwH2ozvp5Vb0yqXtVmDncDMnpBx6Koo7rfi/TVR/6ge7w3Cg0/QJXBBZkXR0kHHnkCOeF4xEsUsr0FjxDbG1gVTRFr04+01kfHIeq12tTQj9IYygCdKcjvEf99dbARvx8nkSoEG1rskbUrFbEoRE8SUD7sGUwKBWDon5onLVEeuQTA4Snuq+amlcBBRNT5j0aYLkwYEJve//xpmqBO0VPZY3d1V3JvaP69F5kpkMeeW3hdb6PU4Kus+gXs/PF7IxOzcaZFQ6gZZUeZ2rrL5WuMtZZZ+rn3NzlnVuQoIg5QKfdVf5Jqpcr4vrBFEpZ5w8Ztbqixg4kxBnDLW9+ZFkx80Y0UebzYXpmOHDkVZcsr8Z/bVvoilmUjRNSH7i5U//12a7+c7oYkcJ9YyhYlenXWiVNnKhLpwyO7W5bZ7f/dSE0k/r9N+i4teCJ64UvAwtzrFdVnNh5/SVDpd6ztLmVY=
     users:
