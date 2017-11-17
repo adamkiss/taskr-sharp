@@ -3,14 +3,18 @@
  * @see https://github.com/lukeed/taskr#plugin
  * @see https://github.com/lukeed/taskr#external-plugins
  */
-module.exports = function (task, utils) {
+function render(opts) {
+	return opts
+}
+
+module.exports = function (task/* utils */) {
 	// Promisify before running else repeats per execution
 	// Const render = utils.promisify(foo.bar);
 
 	// Option #1
-	task.plugin('taskr-sharp', {/* every:true, files:true */}, function * (file, opts) {
-		console.log('a single file object', file); //=> { base, dir, data }
-		console.log('user-provided config', opts); //=> null || {}
+	task.plugin('sharp', {}, function * (file, opts) {
+		// console.log('a single file object', file); // Gives => { base, dir, data }
+		// console.log('user-provided config', opts); // Gives => null || {}
 		yield render(opts);
 	});
 
