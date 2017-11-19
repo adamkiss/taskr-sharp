@@ -11,7 +11,7 @@ const defaultTransform = {
 /* Config is:
 	- object (associative array) of match:[array|single]object pairs
 */
-module.exports = (config, options) => {
+module.exports = config => {
 	const transforms = []
 
 	// eslint-disable-next-line guard-for-in
