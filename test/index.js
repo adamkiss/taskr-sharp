@@ -16,12 +16,11 @@ test('attach `sharp` to taskr and task', t => {
 			t.true('sharp' in task)
 
 			const tmp = tmpDir('tmp1')
+			yield task.clear(tmp) // Cleanup
 			yield task.source(`${dir}/*.@(png|svg)`).target(tmp)
 
 			const arr = yield task.$.expand(`${tmp}/*.svg`)
-			t.is(arr.length, 1, 'copied two files to target tar')
-
-			yield task.clear(tmp) // Cleanup
+			t.is(arr.length, 2, 'copied two files to target tar')
 		}
 	})
 

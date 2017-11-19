@@ -1,6 +1,6 @@
 {
   "name": "taskr-sharp",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Process images with Sharp",
   "repository": "https://github.com/adamkiss/taskr-sharp",
   "main": "index.js",
@@ -14,7 +14,8 @@
     "taskr-sharp"
   ],
   "scripts": {
-    "test": "xo && ava"
+    "test": "xo && ava",
+    "justtest": "ava"
   },
   "author": {
     "name": "taskr-sharp",
@@ -22,6 +23,7 @@
     "url": "https://adamkiss.com"
   },
   "dependencies": {
+    "minimatch": "^3.0.4",
     "sharp": "^0.18.4",
     "taskr": "^1.1.0"
   },
