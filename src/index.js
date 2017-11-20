@@ -54,22 +54,23 @@ module.exports = function (task) {
 				continue
 			}
 
-			file.data = sharp(file.data).clone()
+			const sharpData = sharp(file.data).gamma()
 			let matchIndex = matched.length
 			while (matchIndex--) {
 				const t = matched[matchIndex]
 				transformsGlobs[t.glob] = true
-				transformed.push(Object.assign(rename(file, t.rename), {
-					data: yield t.process(file.data).toBuffer()
-				}))
+				transformed.push(t
+					.process(sharpData.clone()).toBuffer()
+					.then(data => Object.assign(rename(file, t.rename), {data}))
+				)
 				utils.stats.created++
-				warn(file.base)
 			}
 		}
+
 		utils.stats.matched = Object.values(transformsGlobs).map(i => i).length
 		utils.stats.unmatched = Object.keys(transformsGlobs).length - utils.stats.matched
 
 		// Output files
-		this._.files = transformed
+		this._.files = yield Promise.all(transformed)
 	});
 };
