@@ -7,9 +7,9 @@
 const {relative, join} = require('path')
 const sharp = require('sharp')
 
-const utils = require('./src/utils')
-const flattenConfig = require('./src/config')
-const rename = require('./src/rename')
+const utils = require('./utils')
+const flattenConfig = require('./config')
+const rename = require('./rename')
 
 const defaultOpts = {
 	errorOnOverwrite: false,
@@ -63,6 +63,7 @@ module.exports = function (task) {
 					data: yield t.process(file.data).toBuffer()
 				}))
 				utils.stats.created++
+				warn(file.base)
 			}
 		}
 		utils.stats.matched = Object.values(transformsGlobs).map(i => i).length
