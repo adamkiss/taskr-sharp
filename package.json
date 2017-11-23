@@ -24,6 +24,7 @@
   },
   "dependencies": {
     "minimatch": "^3.0.4",
+    "multimatch": "~2.1.0",
     "sharp": "^0.18.4",
     "taskr": "^1.1.0"
   },
@@ -38,6 +39,7 @@
   "xo": {
     "rules": {
       "semi": 0,
+      "camelcase": 0,
       "generator-star-spacing": 0,
       "capitalized-comments": 0,
       "require-yield": 0
