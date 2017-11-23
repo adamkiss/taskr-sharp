@@ -11,6 +11,8 @@ const utils = require('./utils')
 const flattenConfig = require('./config')
 const rename = require('./rename')
 
+const minimatch = require('minimatch')
+
 const defaultOpts = {
 	errorOnOverwrite: false,
 	withoutEnlargement: true
@@ -34,6 +36,24 @@ module.exports = function (task) {
 		}
 
 		opts = Object.assign({}, defaultOpts, opts)
+
+		// Modify Taskr array of files to object `relPath: TaskrFile` pairs
+		const filesobj = {}
+		for (let i = 0; i < files.length; i++) {
+			filesobj[relative(task.root, join(files[i].dir, files[i].base))] = files[i]
+		}
+		files = filesobj
+		console.log(files)
+
+		Object.keys(config).forEach(glob => {
+			config[glob] = {
+				transforms: config[glob],
+				matching: Object.keys(files).filter(minimatch.filter(glob))
+			}
+		})
+
+		console.log(config)
+
 		const transforms = flattenConfig(config, opts)
 		const transformsGlobs = Object.assign({},
 			...Object.keys(config).map(k => {
