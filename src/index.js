@@ -1,19 +1,21 @@
-/**
- * Documentation: Writing Plugins
- * @see https://github.com/lukeed/taskr#plugin
- * @see https://github.com/lukeed/taskr#external-plugins
- */
-
 const {relative, join} = require('path')
 const sharp = require('sharp')
+const multimatch = require('multimatch')
 
 const utils = require('./utils')
-const flattenConfig = require('./config')
 const rename = require('./rename')
 
+// Remove. Or use.
 const defaultOpts = {
 	errorOnOverwrite: false,
-	withoutEnlargement: true
+	withoutEnlargement: true,
+	passUnmatched: true
+}
+
+function transformPromise(transform, sharpPromise, file) {
+	return transform
+		.process(sharpPromise).toBuffer()
+		.then(data => Object.assign(rename(file, transform.rename), {data}))
 }
 
 module.exports = function (task) {
@@ -21,59 +23,58 @@ module.exports = function (task) {
 	const warn = str => utils.warn(str, task)
 
 	task.plugin('sharp', {every: false}, function * (files, config = {}, opts = {}) {
+		// Prepare stuff, fix bad config, etc.
 		if (!utils.isObject(config)) {
 			return err('Configuration must be an object')
 		}
-
 		if (utils.isEmptyObject(config)) {
 			return warn('No transforms, passing through files unchanged')
 		}
-
 		if (files.length === 0) {
 			return warn('No source images to process')
 		}
-
 		opts = Object.assign({}, defaultOpts, opts)
-		const transforms = flattenConfig(config, opts)
-		const transformsGlobs = Object.assign({},
-			...Object.keys(config).map(k => {
-				return {[k]: false}
-			})
-		)
-		utils.stats.total = files.length
 
-		// Loop through files
-		const transformed = []
-		let index = files.length
-		while (index--) {
-			const file = files.pop()
+		// Modify Taskr array of files to object `relPath: TaskrFile` pairs
+		// And also get an array of pure relative paths
+		const files_map = new Map(files.map(
+			f => [relative(task.root, join(f.dir, f.base)), f]
+		))
+		const files_list = Array.from(files_map.keys())
+		const globs_unmatched = ['**/*']
+		const files_transformed = []
 
-			const relPath = relative(task.root, join(file.dir, file.base))
-			const matched = transforms.filter(t => t.matches(relPath))
+		utils.stats.total = files_list.length
+		Object.keys(config).forEach(glob => {
+			globs_unmatched.push(`!${glob}`)
 
-			if (!matched.length > 0) {
-				continue
+			const matched_files = multimatch(files_list, glob)
+			for (let i = 0; i < matched_files.length; i++) {
+				const file = files_map.get(matched_files[i])
+				const sharpData = sharp(file.data).gamma()
+
+				for (let j = 0; j < config[glob].length; j++) {
+					files_transformed.push(
+						transformPromise(config[glob][j], sharpData.clone(), file)
+					)
+					utils.stats.created++
+				}
 			}
+		})
+		const files_unmatched = multimatch(files_list, globs_unmatched)
 
-			const sharpData = sharp(file.data).gamma()
-			let matchIndex = matched.length
-			while (matchIndex--) {
-				const t = matched[matchIndex]
-				transformsGlobs[t.glob] = true
-				transformed.push(t
-					.process(sharpData.clone()).toBuffer()
-					.then(data => Object.assign(rename(file, t.rename), {data}))
-				)
-				utils.stats.created++
-			}
-		}
-
-		utils.stats.matched = Object.values(transformsGlobs).map(i => i).length
-		utils.stats.unmatched = Object.keys(transformsGlobs).length - utils.stats.matched
-
-		console.log(utils.stats)
+		// utils.stats.matched = Object.values(transformsGlobs).map(i => i).length
+		// utils.stats.unmatched = Object.keys(transformsGlobs).length - utils.stats.matched
 
 		// Output files
-		this._.files = yield Promise.all(transformed)
+		this._.files = yield Promise.all(files_transformed)
+		console.log(this._.files.length)
+		if (opts.passUnmatched) {
+			const fu = files_unmatched.map(f => files_map.get(f))
+			this._.files = this._.files.concat(fu)
+		}
+		console.log(this._.files.length)
+
+		// return true
 	});
 };
