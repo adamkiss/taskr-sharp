@@ -14,8 +14,7 @@
     "taskr-sharp"
   ],
   "scripts": {
-    "test": "xo && ava",
-    "justtest": "ava"
+    "test": "ava"
   },
   "author": {
     "name": "taskr-sharp",
@@ -30,8 +29,7 @@
   },
   "devDependencies": {
     "@taskr/clear": "^1.1.0",
-    "ava": "^0.23.0",
-    "xo": "*"
+    "ava": "^0.23.0"
   },
   "engines": {
     "node": ">= 4.6"
