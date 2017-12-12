@@ -18,6 +18,10 @@ function transformPromise(transform, sharpPromise, file) {
 		.then(data => Object.assign(rename(file, transform.rename), {data}))
 }
 
+function emptyTransformPromise(transform, file) {
+	return rename(file, transform.rename)
+}
+
 module.exports = function (task) {
 	const err = str => utils.err(str, task)
 	const warn = str => utils.warn(str, task)
