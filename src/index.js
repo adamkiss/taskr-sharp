@@ -7,8 +7,6 @@ const rename = require('./rename')
 
 // Remove. Or use.
 const defaultOpts = {
-	errorOnOverwrite: false,
-	withoutEnlargement: true,
 	passUnmatched: true
 }
 
@@ -19,7 +17,7 @@ function transformPromise(transform, sharpPromise, file) {
 }
 
 function emptyTransformPromise(transform, file) {
-	return rename(file, transform.rename)
+	return Object.assign({}, {data: file.data}, rename(file, transform.rename))
 }
 
 module.exports = function (task) {
@@ -58,9 +56,11 @@ module.exports = function (task) {
 				const sharpData = sharp(file.data).gamma()
 
 				for (let j = 0; j < config[glob].length; j++) {
-					files_transformed.push(
-						transformPromise(config[glob][j], sharpData.clone(), file)
-					)
+					const ft = ('process' in config[glob][j]) ?
+						transformPromise(config[glob][j], sharpData.clone(), file) :
+						emptyTransformPromise(config[glob][j], file)
+
+					files_transformed.push(ft)
 					utils.stats.created++
 				}
 			}
@@ -72,12 +72,10 @@ module.exports = function (task) {
 
 		// Output files
 		this._.files = yield Promise.all(files_transformed)
-		console.log(this._.files.length)
 		if (opts.passUnmatched) {
 			const fu = files_unmatched.map(f => files_map.get(f))
 			this._.files = this._.files.concat(fu)
 		}
-		console.log(this._.files.length)
 
 		// return true
 	});
