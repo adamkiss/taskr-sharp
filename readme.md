@@ -62,6 +62,8 @@ You can use full [API of Sharp][sharp-docs] in your functions.
 
 If you don't supply a process function, input buffer will just pass through unchanged (useful if you want to keep original, but renamed, for instance).
 
+**Note: files processed with Sharp have `_sharp` property defined as `true`, so if you want e.g. all files minified, you can optimise only images without it (as Sharp runs optimisations on generated files by default)**
+
 ### {rename}
 
 When renaming, you either supply an object with any of the following values: 
