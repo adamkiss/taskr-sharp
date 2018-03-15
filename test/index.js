@@ -200,3 +200,47 @@ test('correctly rename files without transform', t => {
 
 	return taskr.start()
 })
+
+test('tag sharp generated files with _sharp', t => {
+	t.plan(4)
+
+	const taskr = create({
+		* default(task) {
+			const tmp = tmpDir('tmp7')
+
+			yield task
+				.clear(tmp) // Cleanup
+				.source(`${dir}/*.@(png|svg)`)
+				.sharp({
+					'**/*.png': [{
+						rename: {suffix: '-renamed'}
+					}, {
+						process: i => i.negate(),
+						rename: {suffix: '-changed'}
+					}]
+				})
+				.run({every: false}, function*() {
+					task._.files.forEach(f => {
+						switch (f.base) {
+							case 'octocat-renamed.png':
+								t.is('_sharp' in f, false, 'unprocessed file is ignored')
+								break
+							case 'octocat.svg':
+								t.is('_sharp' in f, false, 'unmatched file is ignored')
+								break
+							case 'octocat-changed.png':
+								t.is(f._sharp, true, 'generated file is tagged')
+								break
+							default:
+						}
+					})
+				})
+				.target(tmp)
+
+			const arr = yield task.$.expand(`${tmp}/*.*`)
+			t.is(arr.length, 3, 'copied files without change')
+		}
+	})
+
+	return taskr.start()
+})

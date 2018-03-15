@@ -13,7 +13,7 @@ const defaultOpts = {
 function transformPromise(transform, sharpPromise, file) {
 	return transform
 		.process(sharpPromise).toBuffer()
-		.then(data => Object.assign(rename(file, transform.rename), {data}))
+		.then(data => Object.assign(rename(file, transform.rename), {data, _sharp: true}))
 }
 
 function emptyTransformPromise(transform, file) {
