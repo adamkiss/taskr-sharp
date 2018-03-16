@@ -1,6 +1,6 @@
 {
   "name": "taskr-sharp",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Process images with Sharp",
   "repository": "https://github.com/adamkiss/taskr-sharp",
   "main": "index.js",
