@@ -37,7 +37,7 @@ test('rename files correctly', t => {
 			const tmpName = name => `${tmp}/${name}`
 
 			yield task
-				.clear(tmp) // Cleanup
+				.clear(tmp)
 				.source(`${dir}/*.@(png|svg)`)
 				.sharp({
 					'**/*.svg': [{
@@ -88,7 +88,7 @@ test('rename files without process', t => {
 		* default(task) {
 			const tmp = tmpDir('tmp5')
 			yield task
-				.clear(tmp) // Cleanup
+				.clear(tmp)
 				.source(`${dir}/*.@(png|svg)`)
 				.sharp({
 					'**/octocat.svg': [{
@@ -114,7 +114,7 @@ test('skip unmatched files', t => {
 		* default(task) {
 			const tmp = tmpDir('tmp3')
 			yield task
-				.clear(tmp) // Cleanup
+				.clear(tmp)
 				.source(`${dir}/*.@(png|svg)`)
 				.sharp({
 					'**/octocat.png': [{
@@ -147,7 +147,7 @@ test('pass unmatched files', t => {
 		* default(task) {
 			const tmp = tmpDir('tmp4')
 			yield task
-				.clear(tmp) // Cleanup
+				.clear(tmp)
 				.source(`${dir}/*.@(png|svg)`)
 				.sharp({
 					'**/octocat.png': [{
@@ -176,7 +176,7 @@ test('correctly rename files without transform', t => {
 			let sourceFiles = new Map()
 
 			yield task
-				.clear(tmp) // Cleanup
+				.clear(tmp)
 				.source(`${dir}/*.@(png|svg)`)
 				.run({every: false}, function*() {
 					task._.files.forEach(f => {
@@ -209,7 +209,7 @@ test('tag sharp generated files with _sharp', t => {
 			const tmp = tmpDir('tmp7')
 
 			yield task
-				.clear(tmp) // Cleanup
+				.clear(tmp)
 				.source(`${dir}/*.@(png|svg)`)
 				.sharp({
 					'**/*.png': [{
@@ -239,6 +239,26 @@ test('tag sharp generated files with _sharp', t => {
 
 			const arr = yield task.$.expand(`${tmp}/*.*`)
 			t.is(arr.length, 3, 'copied files without change')
+		}
+	})
+
+	return taskr.start()
+})
+
+test('correctly transform files without rename', t => {
+	t.plan(1)
+
+	const taskr = create({
+		* default(task) {
+			const tmp = tmpDir('tmp8')
+			yield task
+				.clear(tmp)
+				.source(`${dir}/*.@(png|svg)`)
+				.sharp({'**/*.*': [{process: i => i.negate()}]})
+				.target(tmp)
+
+			const arr = yield task.$.expand(`${tmp}/*.*`)
+			t.is(arr.length, 2, 'copied negate files without renaming')
 		}
 	})
 
