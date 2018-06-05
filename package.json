@@ -1,11 +1,13 @@
 {
   "name": "taskr-sharp",
-  "version": "1.1.2",
+  "version": "1.1.3",
   "description": "Process images with Sharp",
   "repository": "https://github.com/adamkiss/taskr-sharp",
   "main": "src/index.js",
   "license": "MIT",
-  "files": ["src"],
+  "files": [
+    "src"
+  ],
   "keywords": [
     "taskr",
     "taskr-plugin",
