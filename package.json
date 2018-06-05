@@ -24,7 +24,7 @@
   "dependencies": {
     "minimatch": "^3.0.4",
     "multimatch": "~2.1.0",
-    "sharp": "^0.18.4",
+    "sharp": "^0.20.1",
     "taskr": "^1.1.0"
   },
   "devDependencies": {
